@@ -33,14 +33,14 @@ public class ClientService implements Runnable{
 					System.out.println(" [SENDED] : " + msg);
 				}
 
-				
-				//str = br.readLine();
-				//System.out.println(" [RECEIVED] : " + str);
-
-				if(msg.equals("quit")){
-					pw.println("[BYE]");
+				if(br.ready()){
+					msg = br.readLine();
+					System.out.println(" [RECEIVED] : " + msg);
+				}
+				if(msg.equals("QUIT")){
+					pw.println("BYE");
 					pw.flush();
-					System.out.println(" [SENDED] : [BYE]");
+					System.out.println(" [SENDED] : BYE");
 					break;
 				}
 				
@@ -51,7 +51,7 @@ public class ClientService implements Runnable{
 			br.close();
 			pw.close();
 			sock.close();
-			System.out.println(" -> Connection closed. \n");
+			System.out.println(" -> Connection closed.");
 		}catch (Exception e){
 			System.out.println(e);
 		}

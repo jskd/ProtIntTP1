@@ -23,11 +23,14 @@ public class ClientTCP {
 								sock.getOutputStream()));
 
 				String rep = "";
+				Thread cmdp = new Thread(new CmdPrompt(pw));
+				cmdp.start();
+			
 
 				while (true) {
 					rep = br.readLine();
-					System.out.println(" [RECEIVED] : " + rep);
-
+					System.out.println("\n[RECEIVED] : " + rep);
+					displayOptions();
 					/*
 					String msg  = sc.nextLine();
 					pw.println(msg);
@@ -46,21 +49,28 @@ public class ClientTCP {
 						break;
 					}
 					*/
-					if(rep.equals("quit")) break;
+					if(rep.equals("BYE")) break;
 				}
 
-				System.out.println("# Disconnecting...");
+				System.out.println("\n# Disconnecting...");
 				pw.close();
 				br.close();
 				sock.close();
 				System.out.println(" -> Connection closed.");
+
 			} catch (Exception e) {
 				sock.close();
 				System.exit(0);
 			}
+
 		} catch (Exception e) {
 			System.out.println("Connection failed.");
 		}
+
 		sc.close();
+	}
+	
+	public static void displayOptions(){
+		System.out.print("[s]Send [q]Quit : ");
 	}
 }

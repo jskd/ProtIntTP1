@@ -26,6 +26,7 @@ public class ServeurTCP{
 					Thread client = new Thread(new ClientService(clientSock));
 					clients.add(client);
 					client.start();
+
 				} catch (Exception e){
 					System.out.println("Error with client.");
 				}
