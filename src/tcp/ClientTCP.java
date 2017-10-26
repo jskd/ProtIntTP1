@@ -31,24 +31,7 @@ public class ClientTCP {
 					rep = br.readLine();
 					System.out.println("\n[RECEIVED] : " + rep);
 					displayOptions();
-					/*
-					String msg  = sc.nextLine();
-					pw.println(msg);
-					pw.flush();
-					System.out.println(" [SENDED] : " + msg);
-					*/
-					
-					/*
-					try{
-						String msg = sc.nextLine();   
-						if (msg.equals("quit")){	
-							break;
-						}
-					}catch (NoSuchElementException e){ // Exception levé lors de Ctrl+D
-						System.out.println("Bye.");
-						break;
-					}
-					*/
+
 					if(rep.equals("BYE")) break;
 				}
 
