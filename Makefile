@@ -4,17 +4,20 @@ JVM = java
 SRC_PATH = src/
 BIN_PATH = bin/
 
-MAIN = Hello
-NAME_JAR = Hello
+SERV = ServeurTCP
+CLIENT = ClientTCP
 
 all:
-	$(JAVAC) $(SRC_PATH)*.java -d $(BIN_PATH)
+	$(JAVAC) $(SRC_PATH)*/*.java -d $(BIN_PATH)
 
 clean:
 	rm -f $(BIN_PATH)*.class
 
-run:
-	$(JVM) -classpath $(BIN_PATH) $(MAIN)
+runserv:
+	$(JVM) -classpath $(BIN_PATH) $(SERV)
+
+runcli:
+	$(JVM) -classpath $(BIN_PATH) $(CLIENT)
 
 runjar:
 	$(JVM) -jar build/dist/$(NAME_JAR).jar
