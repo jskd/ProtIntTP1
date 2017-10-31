@@ -4,16 +4,19 @@ import java.lang.*;
 
 public class ClientService implements Runnable{
 	private Socket sock;
+	private String hostname;
+	private int port;
 
 	public ClientService(Socket s){
 		this.sock = s;
+		this.hostname = sock.getInetAddress().getHostName();
+		this.port = sock.getPort();
 	}
 
 	@Override
 	public void run(){
 		try{
-			String hostname = sock.getInetAddress().getHostName();
-			System.out.println("# New connection with " + hostname + ":" + sock.getPort());
+			System.out.println("# New connection with " + hostname + ":" + port);
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 			PrintWriter pw = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));
@@ -41,6 +44,8 @@ public class ClientService implements Runnable{
 					pw.println("BYE");
 					pw.flush();
 					System.out.println(" [SENDED] : BYE");
+
+					ServeurTCP.clients.remove(this);
 					break;
 				}
 				
