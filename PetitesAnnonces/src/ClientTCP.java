@@ -37,11 +37,11 @@ public class ClientTCP {
 						br.close();
 						pw.close();
 						socket.close();
+						break;
 
 					}catch (Exception e){
 						connected = false;
 						System.out.println(" -> Connection closed.");
-						break;
 					}
 				}
 			}
@@ -62,7 +62,6 @@ public class ClientTCP {
 			connected = true;
 
 			(new Thread(tcp_listening)).start();
-			tcp_sendMsg(ProtocoleToken.WELC);
 
 		} catch (Exception e) {
 			System.out.println("Connection failed.");
@@ -77,12 +76,12 @@ public class ClientTCP {
    * @throws IOException Lance une exception en cas de problème
    */
 	public void tcp_readMessage(Message msg) throws IOException{
-
+		System.out.print(String.format("[RECEIVED] %s", msg));
+		
 		// Comportements définis en fonction du prefixe
 		switch(msg.getPrefix()){
 			case WELC:
 					tcp_sendMsg(ProtocoleToken.NEWC);
-					System.out.println(String.format("[RECEIVED] %s", ProtocoleToken.WELC));
 			break;
 		}
 	}
