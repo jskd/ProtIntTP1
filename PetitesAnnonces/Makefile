@@ -4,8 +4,8 @@ JVM = java
 SRC_PATH = src/
 BIN_PATH = bin/
 
-SERV = ServeurTCP
-CLIENT = ClientTCP
+SERV = Serveur
+CLIENT = Client
 
 all:
 	$(JAVAC) $(SRC_PATH)*.java -d $(BIN_PATH)
