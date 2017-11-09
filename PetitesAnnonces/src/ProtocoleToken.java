@@ -11,14 +11,15 @@ public enum ProtocoleToken{
 	ACKC("ACKC"),
 
 	TCP("TCP"),
-	UDP("UDP"),
-	DIFF("DIFF"),
-	RECEIVED("RECEIVED"),
-	SENT("SENT");
+	UDP("UDP");
 
 	private String name = "";
 
 	ProtocoleToken(String name){
 		this.name = name;	
+	}
+
+	public String toString(){
+		return this.name;
 	}
 }

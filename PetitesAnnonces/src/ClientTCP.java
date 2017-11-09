@@ -3,57 +3,122 @@ import java.net.*;
 import java.util.*;
 
 public class ClientTCP {
-	public static void main(String[] args) {
-		String servAddr = "0.0.0.0", name = "Client";
-		int servPort = 1027;
-		
-		Scanner sc = new Scanner(System.in);
+
+	private String servAddr = "0.0.0.0";
+	private String name = "Client";
+
+	private Socket socket;
+	private int servPort = 1027;
+
+	private BufferedReader br;
+	private PrintWriter pw;
+	private Scanner sc;
+
+	private Runnable tcp_listening;
+	private boolean connected = false;
+
+	public ClientTCP(){
+
+		/**
+	   * Thread d'écoute TCP
+	   */
+		tcp_listening = new Runnable() {
+			public void run(){
+				while(true){
+					try{
+						while(connected){
+							// Lecture des messages entrant
+							String st_mess = br.readLine();
+							Message msg = new Message(st_mess);
+							// Interpretation du message
+							tcp_readMessage(msg);
+						}
+
+						br.close();
+						pw.close();
+						socket.close();
+
+					}catch (Exception e){
+						connected = false;
+						System.out.println(" -> Connection closed.");
+						break;
+					}
+				}
+			}
+		};
+	}
+
+	public void start(){
 		System.out.println("# Connecting to server...");
 
-		try {
-			Socket sock = new Socket(servAddr, servPort);
+		try{
+
+			socket = new Socket(servAddr, servPort);
+			br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));		
+			sc = new Scanner(System.in);
+
 			System.out.println(" -> Connection established.");
-			
-			try {
-				BufferedReader br = new BufferedReader(
-						new InputStreamReader(
-								sock.getInputStream()));
-				PrintWriter pw = new PrintWriter(
-						new OutputStreamWriter(
-								sock.getOutputStream()));
+			connected = true;
 
-				String rep = "";
-				Thread cmdp = new Thread(new CmdPrompt(pw));
-				cmdp.start();
-			
-
-				while (true) {
-					rep = br.readLine();
-					System.out.println("\n[RECEIVED] : " + rep);
-					displayOptions();
-
-					if(rep.equals("BYE")) break;
-				}
-
-				System.out.println("\n# Disconnecting...");
-				pw.close();
-				br.close();
-				sock.close();
-				System.out.println(" -> Connection closed.");
-
-			} catch (Exception e) {
-				sock.close();
-				System.exit(0);
-			}
+			(new Thread(tcp_listening)).start();
+			tcp_sendMsg(ProtocoleToken.WELC);
 
 		} catch (Exception e) {
 			System.out.println("Connection failed.");
+			sc.close();
+		}
+	}
+
+
+	/**
+   * Interpretation du message TCP
+   * @param msg Message 
+   * @throws IOException Lance une exception en cas de problème
+   */
+	public void tcp_readMessage(Message msg) throws IOException{
+
+		// Comportements définis en fonction du prefixe
+		switch(msg.getPrefix()){
+			case WELC:
+					tcp_sendMsg(ProtocoleToken.NEWC);
+					System.out.println(String.format("[RECEIVED] %s", ProtocoleToken.WELC));
+			break;
+		}
+	}
+
+	/**
+   * Permet d'envoyer un message via TCP
+   * @param token Type de message à envoyer
+   * @throws IOException Lance une exception en cas de problème
+   */
+	public void tcp_sendMsg(ProtocoleToken token) throws IOException{
+		
+		Message msg = null; 
+
+		switch(token){
+			case WELC:
+				msg = new Message();
+				msg.setPrefix(ProtocoleToken.WELC);
+			break;
+
+			case NEWC:
+				msg = new Message();
+				msg.setPrefix(ProtocoleToken.NEWC);
+			break;
 		}
 
-		sc.close();
+		if(msg != null){
+			pw.print(msg.toString());
+			pw.flush();
+		}
 	}
 	
-	public static void displayOptions(){
+	public static void displayPrompt(){
 		System.out.print("[s]Send [q]Quit : ");
+	}
+
+	public static void main(String[] args) {
+		(new ClientTCP()).start();
 	}
 }
