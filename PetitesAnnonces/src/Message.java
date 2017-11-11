@@ -44,6 +44,9 @@ public class Message{
 				case ACKC:
 					this.mode = ProtocoleToken.TCP;
 				break;
+
+				case LIST:
+					this.mode = ProtocoleToken.UDP;
 			}
 
 		}catch (Exception e){
@@ -73,6 +76,10 @@ public class Message{
 				this.mode = ProtocoleToken.TCP;
 				mess = String.format("%s",prefix);
 			break;
+
+			case LIST:
+				this.mode = ProtocoleToken.UDP;
+				mess = String.format("%s", prefix);
 		}
 			
 		return mess+((this.mode == ProtocoleToken.TCP) ? "\n" : "");

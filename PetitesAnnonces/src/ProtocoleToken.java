@@ -9,6 +9,7 @@ public enum ProtocoleToken{
 	WELC("WELC"),
 	NEWC("NEWC"),
 	ACKC("ACKC"),
+	LIST("LIST"),
 
 	TCP("TCP"),
 	UDP("UDP");

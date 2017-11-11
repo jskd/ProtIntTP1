@@ -40,10 +40,6 @@ public class Serveur{
 		}
 	}
 
-	public static int nbClients(){
-		return clients.size();
-	}
-
 	public static void main(String[] args){
 		try{
 			(new Serveur()).start();

@@ -7,6 +7,10 @@ public class ClientService implements Runnable{
 	private String hostname;
 	private int port;
 
+	private String ip_multdif = "224.4.4.4";
+	private int multdif_port = 4444;
+	private DatagramSocket dso;
+
 	private BufferedReader br;
 	private PrintWriter pw;
 
@@ -56,6 +60,7 @@ public class ClientService implements Runnable{
 			System.out.println("# New connection with " + hostname + ":" + port);
 			br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+			this.dso = new DatagramSocket();
 			connected = true;
 
 			(new Thread(tcp_listening)).start();
@@ -83,6 +88,7 @@ public class ClientService implements Runnable{
 
 			case NEWC:
 					tcp_sendMsg(ProtocoleToken.ACKC);
+					diff_sendMsg(ProtocoleToken.LIST);
 			break;
 		}
 	}
@@ -116,6 +122,30 @@ public class ClientService implements Runnable{
 		if(msg != null){
 			pw.print(msg.toString());
 			pw.flush();
+		}
+	}
+
+	/**
+   * Envoi le message correspondant au token via UDP multicast
+   * @param token Type de message à envoyer
+   * @throws IOException Lance une exception en cas de problème
+   */
+	public void diff_sendMsg(ProtocoleToken token) throws IOException{
+
+		Message msg = null; 
+
+		switch(token){
+			case LIST:
+				msg = new Message();
+				msg.setPrefix(ProtocoleToken.LIST);
+			break;
+		}
+
+		if(msg != null){
+			// Envoi du message
+			InetSocketAddress isa = new InetSocketAddress(ip_multdif, multdif_port);
+			DatagramPacket paquet = new DatagramPacket(msg.toString().getBytes(), msg.toString().length(), isa);
+			dso.send(paquet);
 		}
 	}
 
