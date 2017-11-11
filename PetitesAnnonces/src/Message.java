@@ -45,6 +45,10 @@ public class Message{
 					this.mode = ProtocoleToken.TCP;
 				break;
 
+				case BYE:
+					this.mode = ProtocoleToken.TCP;
+				break;
+
 				case LIST:
 					this.mode = ProtocoleToken.UDP;
 			}
@@ -73,6 +77,11 @@ public class Message{
 			break;
 
 			case ACKC:
+				this.mode = ProtocoleToken.TCP;
+				mess = String.format("%s",prefix);
+			break;
+
+			case BYE:
 				this.mode = ProtocoleToken.TCP;
 				mess = String.format("%s",prefix);
 			break;

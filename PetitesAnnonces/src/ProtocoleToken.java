@@ -10,6 +10,7 @@ public enum ProtocoleToken{
 	NEWC("NEWC"),
 	ACKC("ACKC"),
 	LIST("LIST"),
+	BYE("BYE"),
 
 	TCP("TCP"),
 	UDP("UDP");

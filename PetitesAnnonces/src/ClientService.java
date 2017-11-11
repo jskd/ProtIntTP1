@@ -83,12 +83,17 @@ public class ClientService implements Runnable{
 		// Comportements définis en fonction du prefixe
 		switch(msg.getPrefix()){
 			case WELC:
-					tcp_sendMsg(ProtocoleToken.NEWC);
+				tcp_sendMsg(ProtocoleToken.NEWC);
 			break;
 
 			case NEWC:
-					tcp_sendMsg(ProtocoleToken.ACKC);
-					diff_sendMsg(ProtocoleToken.LIST);
+				tcp_sendMsg(ProtocoleToken.ACKC);
+				diff_sendMsg(ProtocoleToken.LIST);
+			break;
+
+			case BYE:
+				this.dso.close();
+				this.socket.close();
 			break;
 		}
 	}
