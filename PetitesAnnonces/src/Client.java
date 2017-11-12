@@ -3,6 +3,8 @@ import java.net.*;
 import java.util.*;
 
 public class Client {
+	private boolean DEBUG = true;
+
 	private static final int MAX_SIZE_MSG = 2048;
 	private static String argl; // Ligne de commande brute
   private static ArrayList<String> argv = new ArrayList<String>(); // Liste des arguments
@@ -27,7 +29,6 @@ public class Client {
 	private boolean connected = false;
 
 	public Client(){
-
 		/**
 	   * Thread d'écoute TCP
 	   */
@@ -117,7 +118,7 @@ public class Client {
 	}
 
 	public static void displayPrompt(){
-		System.out.print("[s]Send [q]Quit : ");
+		System.out.print("[a]Annonce [l]List [q]Quit : ");
 	}
 
   /**
@@ -158,6 +159,17 @@ public class Client {
 
 			System.exit(0);
     }
+    else if(argv.get(0).equals("a")){
+
+    	Annonce annonce = new Annonce("Titre", "Blabla", 499);  	
+    	Message mess = annonce.toMessage();
+    	
+    	try{
+    		tcp_sendMsg(mess);
+    	}catch(Exception e){
+    		e.printStackTrace();
+    	}
+    }
     else{
        System.out.format("Command %s doesn't exist.\n", argl);
     }
@@ -170,7 +182,9 @@ public class Client {
    * @throws IOException Lance une exception en cas de problème
    */
 	public void tcp_readMessage(Message msg) throws IOException{
-		//System.out.print(String.format("[RECEIVED TCP] %s", msg));
+		if(DEBUG){
+			System.out.print(String.format("\n[RECEIVED TCP] %s", msg));
+		}
 
 		// Comportements définis en fonction du prefixe
 		switch(msg.getPrefix()){
@@ -186,7 +200,9 @@ public class Client {
    * @throws IOException Lance une exception en cas de problème
    */
 	public void diff_readMessage(Message msg) throws IOException{
-		//System.out.print(String.format("[RECEIVED UDP] %s \n", msg));
+		if(DEBUG){
+			System.out.print(String.format("\n[RECEIVED UDP] %s \n", msg));
+		}
 
 		// Comportements définis en fonction du prefixe
 		switch(msg.getPrefix()){
@@ -221,6 +237,13 @@ public class Client {
 
 		if(msg != null){
 			pw.print(msg.toString());
+			pw.flush();
+		}
+	}
+
+	public void tcp_sendMsg(Message mess) throws IOException{
+		if(mess != null){
+			pw.print(mess.toString());
 			pw.flush();
 		}
 	}

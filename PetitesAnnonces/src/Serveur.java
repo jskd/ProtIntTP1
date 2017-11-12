@@ -2,16 +2,17 @@ import java.net.*;
 import java.io.*;
 import java.lang.*;
 import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.Random;
 
 
 public class Serveur{
 	public static int port = 1027;
-	public static LinkedList<ClientService> clients;
+	public static HashMap<ClientService, LinkedList<Annonce>> clients;
 	private ServerSocket srvSock;
 
 	public Serveur(){
-		clients = new LinkedList<ClientService>();	
+		clients = new HashMap<ClientService, LinkedList<Annonce>>();	
 	}
 
 	public void start(){
@@ -27,7 +28,8 @@ public class Serveur{
 					
 					Socket clientSock = srvSock.accept();
 					ClientService client = new ClientService(clientSock);
-					clients.add(client);
+					clients.put(client, new LinkedList<Annonce>());
+					
 					(new Thread(client)).start();
 
 				} catch (Exception e){

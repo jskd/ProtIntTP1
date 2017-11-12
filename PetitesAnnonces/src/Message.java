@@ -11,6 +11,12 @@ public class Message{
 	// Champs du message (Protocole)
 	private ProtocoleToken prefix = null;
 	private ProtocoleToken mode = null;
+	private int id_src = 0;
+	private int id_dst = 0;
+
+	private String annonce_titre = "";
+	private String annonce_contenu = "";
+	private int annonce_prix = 0;
 
 	/**
 	 * Constructeur par defaut
@@ -49,8 +55,17 @@ public class Message{
 					this.mode = ProtocoleToken.TCP;
 				break;
 
+				case ANNO:
+					this.mode = ProtocoleToken.TCP;
+					this.id_src = Integer.parseInt(argv.get(1));
+					this.annonce_titre = argv.get(2);
+					this.annonce_contenu = argv.get(3);
+					this.annonce_prix = Integer.parseInt(argv.get(4));
+				break;
+
 				case LIST:
 					this.mode = ProtocoleToken.UDP;
+				break;
 			}
 
 		}catch (Exception e){
@@ -86,9 +101,15 @@ public class Message{
 				mess = String.format("%s",prefix);
 			break;
 
+			case ANNO:
+				this.mode = ProtocoleToken.TCP;
+				mess = String.format("%s %s %s %s %s",prefix, id_src, annonce_titre, annonce_contenu, annonce_prix);
+			break;
+
 			case LIST:
 				this.mode = ProtocoleToken.UDP;
 				mess = String.format("%s", prefix);
+			break;
 		}
 			
 		return mess+((this.mode == ProtocoleToken.TCP) ? "\n" : "");
@@ -114,11 +135,51 @@ public class Message{
 		this.prefix = pref;
 	}
 
+	public void setId_Src(int id){
+		this.id_src = id;
+	}
+
+	public void setId_Dst(int id){
+		this.id_dst = id;
+	}
+
+	public void setAnnonce_Titre(String titre){
+		this.annonce_titre = titre;
+	}
+
+	public void setAnnonce_Contenu(String contenu){
+		this.annonce_contenu = contenu;
+	}
+
+	public void setAnnonce_Prix(int prix){
+		this.annonce_prix = prix;
+	}
+
 	/**
 	 * Retourne le prefixe
 	 * @return prefix
 	 */
 	public ProtocoleToken getPrefix(){
 		return this.prefix;
+	}
+
+	public int getId_Src(){
+		return this.id_src;
+	}
+
+	public int getId_Dst(){
+		return this.id_dst;
+	}
+
+	public String getAnnonce_Titre(){
+		return this.annonce_titre;
+	}
+
+	public String getAnnonce_Contenu(){
+		return this.annonce_contenu;
+	}
+
+	public int getAnnonce_Prix(){
+		return this.annonce_prix;
 	}
 }

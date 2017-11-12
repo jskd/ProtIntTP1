@@ -6,6 +6,7 @@ public class ClientService implements Runnable{
 	private Socket socket;
 	private String hostname;
 	private int port;
+	private int id;
 
 	private String ip_multdif = "224.4.4.4";
 	private int multdif_port = 4444;
@@ -21,6 +22,7 @@ public class ClientService implements Runnable{
 		this.socket = s;
 		this.hostname = socket.getInetAddress().getHostName();
 		this.port = socket.getPort();
+		this.id = Integer.parseInt(Tools.getRandomIdent());
 
 		/**
 	   * Thread d'écoute TCP
@@ -91,7 +93,16 @@ public class ClientService implements Runnable{
 				diff_sendMsg(ProtocoleToken.LIST);
 			break;
 
+			case ANNO:
+				Annonce annonce = new Annonce(msg);
+				annonce.setIdClient(this.id);
+				Serveur.clients.get(this).add(annonce);
+
+				diff_sendMsg(annonce.toMessage());
+			break;
+
 			case BYE:
+				Serveur.clients.remove(this);
 				this.dso.close();
 				this.socket.close();
 			break;
@@ -152,6 +163,19 @@ public class ClientService implements Runnable{
 			DatagramPacket paquet = new DatagramPacket(msg.toString().getBytes(), msg.toString().length(), isa);
 			dso.send(paquet);
 		}
+	}
+
+	public void diff_sendMsg(Message msg) throws IOException{
+		if(msg != null){
+			// Envoi du message
+			InetSocketAddress isa = new InetSocketAddress(ip_multdif, multdif_port);
+			DatagramPacket paquet = new DatagramPacket(msg.toString().getBytes(), msg.toString().length(), isa);
+			dso.send(paquet);
+		}
+	}
+
+	public int getId(){
+		return this.id;
 	}
 
 }
