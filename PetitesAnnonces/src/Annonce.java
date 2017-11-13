@@ -1,12 +1,14 @@
 import java.util.*;
 
 public class Annonce{
+	private int id_annonce;
 	private int id_client;
 	private String titre;
 	private String contenu;
 	private int prix;
 
 	public Annonce(String titre, String contenu, int prix){
+		this.id_annonce = Integer.parseInt(Tools.getRandomIdent());
 		this.id_client = 0;
 		this.titre = titre;
 		this.contenu = contenu;
@@ -14,6 +16,7 @@ public class Annonce{
 	}
 
 	public Annonce(Message mess){
+		this.id_annonce = mess.getId_Annonce();
 		this.titre = mess.getAnnonce_Titre();
 		this.contenu = mess.getAnnonce_Contenu();
 		this.prix = mess.getAnnonce_Prix();
@@ -23,6 +26,7 @@ public class Annonce{
 		Message mess = new Message();
 		mess.setPrefix(ProtocoleToken.ANNO);
 		mess.setId_Src(this.id_client);
+		mess.setId_Annonce(this.id_annonce);
 		mess.setAnnonce_Titre(this.titre);
 		mess.setAnnonce_Contenu(this.contenu);
 		mess.setAnnonce_Prix(this.prix);

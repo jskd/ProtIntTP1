@@ -13,10 +13,11 @@ public class Message{
 	private ProtocoleToken mode = null;
 	private int id_src = 0;
 	private int id_dst = 0;
-
+	private int id_annonce = 0;
 	private String annonce_titre = "";
 	private String annonce_contenu = "";
 	private int annonce_prix = 0;
+	private String client_message = "";
 
 	/**
 	 * Constructeur par defaut
@@ -57,10 +58,18 @@ public class Message{
 
 				case ANNO:
 					this.mode = ProtocoleToken.TCP;
+					this.id_annonce = Integer.parseInt(argv.get(1));
+					this.id_src = Integer.parseInt(argv.get(2));
+					this.annonce_titre = argv.get(3);
+					this.annonce_contenu = argv.get(4);
+					this.annonce_prix = Integer.parseInt(argv.get(5));
+				break;
+
+				case MESS:
+					this.mode = ProtocoleToken.TCP;
 					this.id_src = Integer.parseInt(argv.get(1));
-					this.annonce_titre = argv.get(2);
-					this.annonce_contenu = argv.get(3);
-					this.annonce_prix = Integer.parseInt(argv.get(4));
+					this.id_dst = Integer.parseInt(argv.get(2));
+					this.client_message = argv.get(3);
 				break;
 
 				case LIST:
@@ -103,7 +112,13 @@ public class Message{
 
 			case ANNO:
 				this.mode = ProtocoleToken.TCP;
-				mess = String.format("%s %s %s %s %s",prefix, id_src, annonce_titre, annonce_contenu, annonce_prix);
+				mess = String.format("%s %s %s %s %s %s",prefix, id_annonce, id_src, 
+					annonce_titre, annonce_contenu, annonce_prix);
+			break;
+
+			case MESS:
+				this.mode = ProtocoleToken.TCP;
+				mess = String.format("%s %s %s %s",prefix, id_src, id_dst, client_message);
 			break;
 
 			case LIST:
@@ -143,6 +158,10 @@ public class Message{
 		this.id_dst = id;
 	}
 
+	public void setId_Annonce(int id){
+		this.id_annonce = id;
+	}
+
 	public void setAnnonce_Titre(String titre){
 		this.annonce_titre = titre;
 	}
@@ -153,6 +172,10 @@ public class Message{
 
 	public void setAnnonce_Prix(int prix){
 		this.annonce_prix = prix;
+	}
+
+	public void setClientMessage(String str){
+		this.client_message = str;
 	}
 
 	/**
@@ -171,6 +194,10 @@ public class Message{
 		return this.id_dst;
 	}
 
+	public int getId_Annonce(){
+		return this.id_annonce;
+	}
+
 	public String getAnnonce_Titre(){
 		return this.annonce_titre;
 	}
@@ -181,5 +208,9 @@ public class Message{
 
 	public int getAnnonce_Prix(){
 		return this.annonce_prix;
+	}
+
+	public String getClientMessage(){
+		return this.client_message;
 	}
 }

@@ -6,9 +6,11 @@ public class Client {
 	private boolean DEBUG = true;
 
 	private static final int MAX_SIZE_MSG = 2048;
-	private static String argl; // Ligne de commande brute
-  private static ArrayList<String> argv = new ArrayList<String>(); // Liste des arguments
+	private static String argl;
+  private static ArrayList<String> argv = new ArrayList<String>();
   private static Scanner sc = new Scanner(System.in);
+
+  private LinkedList<Annonce> annonces;
 
 	private String servAddr = "0.0.0.0";
 	private String name = "Client";
@@ -23,12 +25,12 @@ public class Client {
 	private BufferedReader br;
 	private PrintWriter pw;
 	
-
 	private Runnable tcp_listening;
 	private Runnable multicast_listening;
 	private boolean connected = false;
 
 	public Client(){
+		this.annonces = new LinkedList<Annonce>();
 		/**
 	   * Thread d'écoute TCP
 	   */
@@ -118,7 +120,7 @@ public class Client {
 	}
 
 	public static void displayPrompt(){
-		System.out.print("[a]Annonce [l]List [q]Quit : ");
+		System.out.print("[a]Annonce [l]List [m]Message [q]Quit : ");
 	}
 
   /**
@@ -163,11 +165,38 @@ public class Client {
 
     	Annonce annonce = new Annonce("Titre", "Blabla", 499);  	
     	Message mess = annonce.toMessage();
-    	
+
     	try{
     		tcp_sendMsg(mess);
     	}catch(Exception e){
     		e.printStackTrace();
+    	}
+    }
+    else if(argv.get(0).equals("l")){
+    	for(int i=0; i<annonces.size(); i++){
+    		Annonce ann = annonces.get(i);
+    		System.out.println(String.format("[%d] %s %s %s", i, ann.getTitre(), ann.getContenu(),
+    			ann.getPrix()));
+    	}
+    }
+    else if(argv.get(0).equals("m")){
+    	if(argv.size() > 1){
+    		System.out.print("Write message : ");
+    		String client_message = sc.nextLine();
+
+    		Message mess = new Message();
+    		mess.setPrefix(ProtocoleToken.MESS);
+    		mess.setId_Dst(Integer.parseInt(argv.get(1)));
+    		mess.setClientMessage(client_message);
+
+    		try{
+	    		tcp_sendMsg(mess);
+	    	}catch(Exception e){
+	    		e.printStackTrace();
+	    	}
+    	}
+    	else{
+    		System.out.println("Usage : m <id_client>");
     	}
     }
     else{
@@ -191,6 +220,9 @@ public class Client {
 			case WELC:
 				tcp_sendMsg(ProtocoleToken.NEWC);
 			break;
+
+			case MESS:
+			break;
 		}
 	}
 
@@ -208,6 +240,11 @@ public class Client {
 		switch(msg.getPrefix()){
 			case LIST:
 				System.out.println("\n -> List received.");
+			break;
+
+			case ANNO:
+				Annonce annonce = new Annonce(msg);
+				this.annonces.add(annonce);
 			break;
 		}
 

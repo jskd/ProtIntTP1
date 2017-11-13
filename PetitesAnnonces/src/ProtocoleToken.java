@@ -11,6 +11,7 @@ public enum ProtocoleToken{
 	ACKC("ACKC"),
 	ANNO("ANNO"),
 	LIST("LIST"),
+	MESS("MESS"),
 	BYE("BYE"),
 
 	TCP("TCP"),

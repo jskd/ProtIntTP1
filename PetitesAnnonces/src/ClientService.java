@@ -101,6 +101,9 @@ public class ClientService implements Runnable{
 				diff_sendMsg(annonce.toMessage());
 			break;
 
+			case MESS:
+			break;
+
 			case BYE:
 				Serveur.clients.remove(this);
 				this.dso.close();
