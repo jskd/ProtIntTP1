@@ -4,8 +4,13 @@ JVM = java
 SRC_PATH = src/
 BIN_PATH = bin/
 
-SERV = ServeurTCP
-CLIENT = ClientTCP
+SERV_TCP = ServeurTCP
+CLIENT_TCP = ClientTCP
+
+SERV_UDP = ServeurUDP
+CLIENT_UDP = ClientUDP
+
+NAME = TP1_Lefranc_Skoda
 
 all:
 	$(JAVAC) $(SRC_PATH)*/*.java -d $(BIN_PATH)
@@ -13,22 +18,20 @@ all:
 clean:
 	rm -f $(BIN_PATH)*.class
 
-runserv:
-	$(JVM) -classpath $(BIN_PATH) $(SERV)
+runservtcp:
+	$(JVM) -classpath $(BIN_PATH) $(SERV_TCP)
 
-runcli:
-	$(JVM) -classpath $(BIN_PATH) $(CLIENT)
+runclitcp:
+	$(JVM) -classpath $(BIN_PATH) $(CLIENT_TCP)
 
-runjar:
-	$(JVM) -jar build/dist/$(NAME_JAR).jar
+runservudp:
+	$(JVM) -classpath $(BIN_PATH) $(SERV_UDP)
 
-jar: all
-	jar cvmf META-INF/MANIFEST.MF build/dist/$(NAME_JAR).jar -C $(BIN_PATH) .
+runcliudp:
+	$(JVM) -classpath $(BIN_PATH) $(CLIENT_UDP)
 
 tar: clean
-	tar cf $(NAME_JAR).tar Makefile README.txt META-INF/ bin/ src/  javadoc/
+	tar cf $(NAME).tar Makefile README.txt rapport.txt bin/ src/
 
-doc:
-	javadoc -encoding utf8 -docencoding utf8 -charset utf8 -d javadoc -author $(SRC_PATH)*.java
 
 

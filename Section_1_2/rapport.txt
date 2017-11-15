@@ -8,3 +8,5 @@ Exemple:
 * Client2: Bar
 * Serveur: Foooooooooooooooooooooooooo
 * Serveur: Baroooooooooooooooooooooooo
+
+Ceci car le buffer n'est pas reset dans le while du serveur.
