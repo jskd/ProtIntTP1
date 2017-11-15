@@ -181,22 +181,31 @@ public class Client {
     }
     else if(argv.get(0).equals("m")){
     	if(argv.size() > 1){
-    		System.out.print("Write message : ");
-    		String client_message = sc.nextLine();
+    		int no_annonce = Integer.parseInt(argv.get(1));
 
-    		Message mess = new Message();
-    		mess.setPrefix(ProtocoleToken.MESS);
-    		mess.setId_Dst(Integer.parseInt(argv.get(1)));
-    		mess.setClientMessage(client_message);
+    		if(no_annonce < this.annonces.size()){
 
-    		try{
-	    		tcp_sendMsg(mess);
-	    	}catch(Exception e){
-	    		e.printStackTrace();
-	    	}
+	    		System.out.print("Write message : ");
+	    		String client_message = sc.nextLine();
+
+	    		Message mess = new Message();
+	    		mess.setPrefix(ProtocoleToken.MESS);
+	    		mess.setId_Dst(this.annonces.get(no_annonce).getIdClient());
+	    		mess.setClientMessage(client_message);
+
+	    		try{
+		    		tcp_sendMsg(mess);
+		    	}catch(Exception e){
+		    		e.printStackTrace();
+		    	}
+    		}
+    		else{
+    			System.out.println(String.format("Error: L'annonce %d n'existe pas.", no_annonce));
+    		}
+
     	}
     	else{
-    		System.out.println("Usage : m <id_client>");
+    		System.out.println("Usage : m <annonce_number>");
     	}
     }
     else{
@@ -269,6 +278,11 @@ public class Client {
 			case NEWC:
 				msg = new Message();
 				msg.setPrefix(ProtocoleToken.NEWC);
+			break;
+
+			case BYE:
+				msg = new Message();
+				msg.setPrefix(ProtocoleToken.BYE);
 			break;
 		}
 

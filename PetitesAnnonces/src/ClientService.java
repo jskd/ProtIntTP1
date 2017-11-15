@@ -1,6 +1,7 @@
 import java.net.*;
 import java.io.*;
 import java.lang.*;
+import java.util.*;
 
 public class ClientService implements Runnable{
 	private Socket socket;
@@ -102,6 +103,26 @@ public class ClientService implements Runnable{
 			break;
 
 			case MESS:
+				ClientService destinataire = null;
+
+				// Recherche du destinataire du message
+				Iterator it = Serveur.clients.entrySet().iterator();
+				while (it.hasNext()) {
+					Map.Entry pair = (Map.Entry)it.next();
+					ClientService current = (ClientService) pair.getKey();
+					if(current.getId() == msg.getId_Dst()){
+						destinataire = current;
+						break;
+					}
+					it.remove();
+				}
+
+				if(destinataire != null){
+					msg.setId_Dst(destinataire.getId());
+					msg.setId_Src(this.getId());
+					destinataire.tcp_sendMsg(msg);					
+				}
+
 			break;
 
 			case BYE:
@@ -140,6 +161,13 @@ public class ClientService implements Runnable{
 
 		if(msg != null){
 			pw.print(msg.toString());
+			pw.flush();
+		}
+	}
+
+	public void tcp_sendMsg(Message mess) throws IOException{
+		if(mess != null){
+			pw.print(mess.toString());
 			pw.flush();
 		}
 	}

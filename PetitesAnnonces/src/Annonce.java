@@ -16,6 +16,7 @@ public class Annonce{
 	}
 
 	public Annonce(Message mess){
+		this.id_client = mess.getId_Src();
 		this.id_annonce = mess.getId_Annonce();
 		this.titre = mess.getAnnonce_Titre();
 		this.contenu = mess.getAnnonce_Contenu();
