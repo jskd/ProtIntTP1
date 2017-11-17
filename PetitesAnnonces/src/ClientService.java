@@ -68,6 +68,13 @@ public class ClientService implements Runnable{
 
 			(new Thread(tcp_listening)).start();
 
+			// Envoi de la liste des annonces
+			Message msg = new Message();
+			msg.setPrefix(ProtocoleToken.LIST);
+			msg.setNbAnno(0);
+
+			diff_sendMsg(msg);
+
 		}catch (Exception e){
 			System.out.println("Connection failed.");
 		}

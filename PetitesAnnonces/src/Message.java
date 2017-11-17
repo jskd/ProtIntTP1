@@ -18,6 +18,7 @@ public class Message{
 	private String annonce_contenu = "";
 	private int annonce_prix = 0;
 	private String client_message = "";
+	private int nb_anno = 0;
 
 	/**
 	 * Constructeur par defaut
@@ -62,6 +63,7 @@ public class Message{
 
 				case LIST:
 					this.mode = ProtocoleToken.UDP;
+					this.nb_anno = Integer.parseInt(argv.get(1));
 				break;
 			}
 
@@ -96,7 +98,7 @@ public class Message{
 
 			case LIST:
 				this.mode = ProtocoleToken.UDP;
-				mess = String.format("%s", prefix);
+				mess = String.format("%s %s", prefix, this.nb_anno);
 			break;
 		}
 			
@@ -151,6 +153,10 @@ public class Message{
 		this.client_message = str;
 	}
 
+	public void setNbAnno(int nb_anno){
+		this.nb_anno = nb_anno;
+	}
+
 	/**
 	 * Retourne le prefixe
 	 * @return prefix
@@ -185,5 +191,9 @@ public class Message{
 
 	public String getClientMessage(){
 		return this.client_message;
+	}
+
+	public int getNbAnno(){
+		return this.nb_anno;
 	}
 }
