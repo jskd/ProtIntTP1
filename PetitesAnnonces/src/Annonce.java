@@ -8,7 +8,6 @@ public class Annonce{
 	private int prix;
 
 	public Annonce(String titre, String contenu, int prix){
-		this.id_annonce = Integer.parseInt(Tools.getRandomIdent());
 		this.id_client = 0;
 		this.titre = titre;
 		this.contenu = contenu;
@@ -34,6 +33,10 @@ public class Annonce{
 		return mess;
 	}
 
+	public int getIdAnnonce(){
+		return this.id_annonce;
+	}
+
 	public int getIdClient(){
 		return this.id_client;
 	}
@@ -48,6 +51,10 @@ public class Annonce{
 
 	public int getPrix(){
 		return this.prix;
+	}
+
+	public void setIdAnnonce(int id){
+		this.id_annonce = id;
 	}
 	
 	public void setIdClient(int id){

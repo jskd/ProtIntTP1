@@ -29,7 +29,8 @@ public class Client {
 	private Runnable multicast_listening;
 	private boolean connected = false;
 
-	public Client(){
+	public Client(String ip){
+		this.servAddr = ip;
 		this.annonces = new LinkedList<Annonce>();
 		/**
 	   * Thread d'écoute TCP
@@ -226,10 +227,6 @@ public class Client {
 
 		// Comportements définis en fonction du prefixe
 		switch(msg.getPrefix()){
-			case WELC:
-				tcp_sendMsg(ProtocoleToken.NEWC);
-			break;
-
 			case MESS:
 			break;
 		}
@@ -270,16 +267,6 @@ public class Client {
 		Message msg = null; 
 
 		switch(token){
-			case WELC:
-				msg = new Message();
-				msg.setPrefix(ProtocoleToken.WELC);
-			break;
-
-			case NEWC:
-				msg = new Message();
-				msg.setPrefix(ProtocoleToken.NEWC);
-			break;
-
 			case BYE:
 				msg = new Message();
 				msg.setPrefix(ProtocoleToken.BYE);
@@ -300,6 +287,11 @@ public class Client {
 	}
 
 	public static void main(String[] args) {
-		(new Client()).start();
+		if(args.length >= 1){
+			(new Client(args[0])).start();
+		}
+		else{
+			System.out.println("Usage: Client <ip_serveur>");
+		}
 	}
 }

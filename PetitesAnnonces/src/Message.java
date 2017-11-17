@@ -34,24 +34,12 @@ public class Message{
 	 * @throws MalformedMsgException Lance une exception si le message est malformé
 	 */
 	public Message(String mess) throws MalformedMsgException{
-		ArrayList<String> argv = new ArrayList<String>(Arrays.asList(mess.split("\\s")));
+		ArrayList<String> argv = new ArrayList<String>(Arrays.asList(mess.split("\\s+")));
 
 		try{
 			this.prefix = ProtocoleToken.valueOf(argv.get(0));
 
 			switch(prefix){
-				case WELC:
-					this.mode = ProtocoleToken.TCP;
-				break;
-
-				case NEWC:
-					this.mode = ProtocoleToken.TCP;
-				break;
-
-				case ACKC:
-					this.mode = ProtocoleToken.TCP;
-				break;
-
 				case BYE:
 					this.mode = ProtocoleToken.TCP;
 				break;
@@ -90,21 +78,6 @@ public class Message{
 		String mess = "";
 
 		switch(prefix){
-			case WELC:
-				this.mode = ProtocoleToken.TCP;
-				mess = String.format("%s", prefix);
-			break;
-
-			case NEWC:
-				this.mode = ProtocoleToken.TCP;
-				mess = String.format("%s",prefix);
-			break;
-
-			case ACKC:
-				this.mode = ProtocoleToken.TCP;
-				mess = String.format("%s",prefix);
-			break;
-
 			case BYE:
 				this.mode = ProtocoleToken.TCP;
 				mess = String.format("%s",prefix);

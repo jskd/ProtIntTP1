@@ -6,9 +6,6 @@
  */
 
 public enum ProtocoleToken{
-	WELC("WELC"),
-	NEWC("NEWC"),
-	ACKC("ACKC"),
 	ANNO("ANNO"),
 	LIST("LIST"),
 	MESS("MESS"),

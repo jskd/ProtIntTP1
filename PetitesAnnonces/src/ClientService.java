@@ -67,7 +67,6 @@ public class ClientService implements Runnable{
 			connected = true;
 
 			(new Thread(tcp_listening)).start();
-			tcp_sendMsg(ProtocoleToken.WELC);
 
 		}catch (Exception e){
 			System.out.println("Connection failed.");
@@ -85,18 +84,10 @@ public class ClientService implements Runnable{
 
 		// Comportements définis en fonction du prefixe
 		switch(msg.getPrefix()){
-			case WELC:
-				tcp_sendMsg(ProtocoleToken.NEWC);
-			break;
-
-			case NEWC:
-				tcp_sendMsg(ProtocoleToken.ACKC);
-				diff_sendMsg(ProtocoleToken.LIST);
-			break;
-
 			case ANNO:
 				Annonce annonce = new Annonce(msg);
 				annonce.setIdClient(this.id);
+				annonce.setIdAnnonce(Integer.parseInt(Tools.getRandomIdent()));
 				Serveur.clients.get(this).add(annonce);
 
 				diff_sendMsg(annonce.toMessage());
@@ -143,19 +134,7 @@ public class ClientService implements Runnable{
 		Message msg = null; 
 
 		switch(token){
-			case WELC:
-				msg = new Message();
-				msg.setPrefix(ProtocoleToken.WELC);
-			break;
-
-			case NEWC:
-				msg = new Message();
-				msg.setPrefix(ProtocoleToken.NEWC);
-			break;
-
-			case ACKC:
-				msg = new Message();
-				msg.setPrefix(ProtocoleToken.ACKC);
+			default:
 			break;
 		}
 
