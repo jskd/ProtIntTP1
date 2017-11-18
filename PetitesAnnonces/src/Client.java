@@ -227,6 +227,10 @@ public class Client {
 
 		// Comportements définis en fonction du prefixe
 		switch(msg.getPrefix()){
+			case LIST:
+				System.out.println("\n -> List received.");
+			break;
+			
 			case MESS:
 			break;
 		}

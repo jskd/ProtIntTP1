@@ -70,10 +70,11 @@ public class ClientService implements Runnable{
 
 			// Envoi de la liste des annonces
 			Message msg = new Message();
+			msg.setMode(ProtocoleToken.TCP);
 			msg.setPrefix(ProtocoleToken.LIST);
 			msg.setNbAnno(0);
 
-			diff_sendMsg(msg);
+			tcp_sendMsg(msg);
 
 		}catch (Exception e){
 			System.out.println("Connection failed.");

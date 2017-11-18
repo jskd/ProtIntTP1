@@ -62,7 +62,6 @@ public class Message{
 				break;
 
 				case LIST:
-					this.mode = ProtocoleToken.UDP;
 					this.nb_anno = Integer.parseInt(argv.get(1));
 				break;
 			}
@@ -97,7 +96,6 @@ public class Message{
 			break;
 
 			case LIST:
-				this.mode = ProtocoleToken.UDP;
 				mess = String.format("%s %s", prefix, this.nb_anno);
 			break;
 		}
@@ -121,6 +119,11 @@ public class Message{
 	 * Modifie le prefixe
 	 * @param pref Nouveau prefixe
 	 */
+
+	public void setMode(ProtocoleToken mode){
+		this.mode = mode;
+	}
+
 	public void setPrefix(ProtocoleToken pref){
 		this.prefix = pref;
 	}
@@ -161,6 +164,11 @@ public class Message{
 	 * Retourne le prefixe
 	 * @return prefix
 	 */
+
+	public ProtocoleToken getMode(){
+		return this.mode;
+	}
+
 	public ProtocoleToken getPrefix(){
 		return this.prefix;
 	}
