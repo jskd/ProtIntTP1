@@ -10,6 +10,7 @@ CLIENT = Client
 NAME = Annonces_Lefranc_Skoda
 
 all:
+	@mkdir -p $(BIN_PATH)
 	$(JAVAC) $(SRC_PATH)*.java -d $(BIN_PATH)
 
 clean:
