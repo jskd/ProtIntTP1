@@ -4,6 +4,7 @@ import java.lang.*;
 import java.util.*;
 
 public class ClientService implements Runnable{
+	private boolean DEBUG = false;
 	private Socket socket;
 	private String hostname;
 	private int port;
@@ -50,6 +51,7 @@ public class ClientService implements Runnable{
 
 					}catch (Exception e){
 						connected = false;
+						//e.printStackTrace();
 						System.out.println(" -> Connection closed.");
 					}
 				}
@@ -68,13 +70,7 @@ public class ClientService implements Runnable{
 
 			(new Thread(tcp_listening)).start();
 
-			// Envoi de la liste des annonces
-			Message msg = new Message();
-			msg.setMode(ProtocoleToken.TCP);
-			msg.setPrefix(ProtocoleToken.LIST);
-			msg.setNbAnno(0);
-
-			tcp_sendMsg(msg);
+			tcp_sendListAnnonces();
 
 		}catch (Exception e){
 			System.out.println("Connection failed.");
@@ -87,8 +83,9 @@ public class ClientService implements Runnable{
    * @throws IOException Lance une exception en cas de problème
    */
 	public void tcp_readMessage(Message msg) throws IOException{
-
-		System.out.print(String.format("[RECEIVED] %s", msg));
+		if(DEBUG){
+			System.out.print(String.format("[RECEIVED TCP] %s", msg));
+		}
 
 		// Comportements définis en fonction du prefixe
 		switch(msg.getPrefix()){
@@ -126,69 +123,76 @@ public class ClientService implements Runnable{
 
 			case BYE:
 				Serveur.clients.remove(this);
+				udp_sendListAnnonces();
 				this.dso.close();
 				this.socket.close();
 			break;
 		}
 	}
 
-	/**
-   * Permet d'envoyer un message via TCP
-   * @param token Type de message à envoyer
-   * @throws IOException Lance une exception en cas de problème
-   */
-	public void tcp_sendMsg(ProtocoleToken token) throws IOException{
-		
-		Message msg = null; 
-
-		switch(token){
-			default:
-			break;
-		}
-
+	public void tcp_sendMsg(Message msg) throws IOException{
 		if(msg != null){
+			msg.setMode(ProtocoleToken.TCP);
 			pw.print(msg.toString());
 			pw.flush();
 		}
 	}
 
-	public void tcp_sendMsg(Message mess) throws IOException{
-		if(mess != null){
-			pw.print(mess.toString());
-			pw.flush();
-		}
-	}
-
-	/**
-   * Envoi le message correspondant au token via UDP multicast
-   * @param token Type de message à envoyer
-   * @throws IOException Lance une exception en cas de problème
-   */
-	public void diff_sendMsg(ProtocoleToken token) throws IOException{
-
-		Message msg = null; 
-
-		switch(token){
-			case LIST:
-				msg = new Message();
-				msg.setPrefix(ProtocoleToken.LIST);
-			break;
-		}
-
-		if(msg != null){
-			// Envoi du message
-			InetSocketAddress isa = new InetSocketAddress(ip_multdif, multdif_port);
-			DatagramPacket paquet = new DatagramPacket(msg.toString().getBytes(), msg.toString().length(), isa);
-			dso.send(paquet);
-		}
-	}
-
 	public void diff_sendMsg(Message msg) throws IOException{
 		if(msg != null){
+			msg.setMode(ProtocoleToken.UDP);
 			// Envoi du message
 			InetSocketAddress isa = new InetSocketAddress(ip_multdif, multdif_port);
 			DatagramPacket paquet = new DatagramPacket(msg.toString().getBytes(), msg.toString().length(), isa);
 			dso.send(paquet);
+		}
+	}
+
+	public void tcp_sendListAnnonces() throws IOException{
+		Message msg = null;
+
+		msg = new Message();
+		msg.setMode(ProtocoleToken.TCP);
+		msg.setPrefix(ProtocoleToken.LIST);
+		tcp_sendMsg(msg);
+
+		// Parcours des annonces
+		Iterator it = Serveur.clients.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry)it.next();
+			LinkedList annonces = (LinkedList) pair.getValue();
+			for(int i=0; i<annonces.size(); i++){
+				msg = ((Annonce)annonces.get(i)).toMessage();
+
+				if(msg != null){
+					msg.setMode(ProtocoleToken.TCP);
+					tcp_sendMsg(msg);
+				}
+			}
+		}
+	}
+
+	public void udp_sendListAnnonces() throws IOException{
+		Message msg = null;
+
+		msg = new Message();
+		msg.setMode(ProtocoleToken.UDP);
+		msg.setPrefix(ProtocoleToken.LIST);
+		diff_sendMsg(msg);
+
+		// Parcours des annonces
+		Iterator it = Serveur.clients.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry)it.next();
+			LinkedList annonces = (LinkedList) pair.getValue();
+			for(int i=0; i<annonces.size(); i++){
+				msg = ((Annonce)annonces.get(i)).toMessage();
+
+				if(msg != null){
+					msg.setMode(ProtocoleToken.UDP);
+					diff_sendMsg(msg);
+				}
+			}
 		}
 	}
 

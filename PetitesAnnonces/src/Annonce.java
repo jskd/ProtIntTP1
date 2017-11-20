@@ -5,9 +5,9 @@ public class Annonce{
 	private int id_client;
 	private String titre;
 	private String contenu;
-	private int prix;
+	private double prix;
 
-	public Annonce(String titre, String contenu, int prix){
+	public Annonce(String titre, String contenu, double prix){
 		this.id_client = 0;
 		this.titre = titre;
 		this.contenu = contenu;
@@ -49,7 +49,7 @@ public class Annonce{
 		return this.contenu;
 	}
 
-	public int getPrix(){
+	public double getPrix(){
 		return this.prix;
 	}
 

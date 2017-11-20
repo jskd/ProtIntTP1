@@ -9,6 +9,7 @@ public enum ProtocoleToken{
 	ANNO("ANNO"),
 	LIST("LIST"),
 	MESS("MESS"),
+	DELETE("DELETE"),
 	BYE("BYE"),
 
 	TCP("TCP"),

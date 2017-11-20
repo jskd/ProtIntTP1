@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.*;
 
 public class Client {
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	private static final int MAX_SIZE_MSG = 2048;
 	private static String argl;
@@ -121,7 +121,7 @@ public class Client {
 	}
 
 	public static void displayPrompt(){
-		System.out.print("[a]Annonce [l]List [m]Message [q]Quit : ");
+		System.out.print("\n[a]Annonce [ta]TestAnno [l]List [m]Message [q]Quit : ");
 	}
 
   /**
@@ -164,11 +164,20 @@ public class Client {
     }
     else if(argv.get(0).equals("a")){
 
-    	Annonce annonce = new Annonce("Titre", "Blabla", 499);  	
-    	Message mess = annonce.toMessage();
-
     	try{
+    		System.out.print(" +Titre : ");
+    		String title = sc.nextLine();
+    		System.out.print(" +Contenu : ");
+    		String content = sc.nextLine();
+    		System.out.print(" +Prix : ");
+    		Double prix = Double.parseDouble(sc.nextLine());
+
+    		Annonce annonce = new Annonce(title, content, prix);  	
+    		Message mess = annonce.toMessage();
     		tcp_sendMsg(mess);
+
+    		System.out.println("\n -> Annonce delivered !");
+
     	}catch(Exception e){
     		e.printStackTrace();
     	}
@@ -176,7 +185,7 @@ public class Client {
     else if(argv.get(0).equals("l")){
     	for(int i=0; i<annonces.size(); i++){
     		Annonce ann = annonces.get(i);
-    		System.out.println(String.format("[%d] %s %s %s", i, ann.getTitre(), ann.getContenu(),
+    		System.out.println(String.format("[%d] %s %s %s$", ann.getIdClient(), ann.getTitre(), ann.getContenu(),
     			ann.getPrix()));
     	}
     }
@@ -186,7 +195,7 @@ public class Client {
 
     		if(no_annonce < this.annonces.size()){
 
-	    		System.out.print("Write message : ");
+	    		System.out.print(" +Message : ");
 	    		String client_message = sc.nextLine();
 
 	    		Message mess = new Message();
@@ -209,6 +218,24 @@ public class Client {
     		System.out.println("Usage : m <annonce_number>");
     	}
     }
+    else if(argv.get(0).equals("ta")){
+    	LinkedList<Annonce> annonces = new LinkedList<>();
+
+    	annonces.add(new Annonce("Fender Télécaster", "ClassicVibe Custom", 489));	
+    	annonces.add(new Annonce("Ford Mustang", "GT350 Shelby", 55999));  	
+    	annonces.add(new Annonce("Luxury Chess", "Avec double dame.", 179));
+    	
+    	try{
+    		for(int i=0; i<annonces.size(); i++){
+	    		Message mess = annonces.get(i).toMessage();
+	    		tcp_sendMsg(mess);
+    		}
+
+    		System.out.println(" -> Annonces de test envoyées.");
+    	}catch(Exception e){
+    		e.printStackTrace();
+    	}
+    }
     else{
        System.out.format("Command %s doesn't exist.\n", argl);
     }
@@ -228,10 +255,14 @@ public class Client {
 		// Comportements définis en fonction du prefixe
 		switch(msg.getPrefix()){
 			case LIST:
-				System.out.println("\n -> List received.");
+				this.annonces.clear();
 			break;
-			
+			case ANNO:
+				Annonce annonce = new Annonce(msg);
+				this.annonces.add(annonce);
+			break;
 			case MESS:
+				System.out.println(String.format(" >[from %s] : %s ", msg.getId_Src(), msg.getClientMessage()));
 			break;
 		}
 	}
@@ -249,16 +280,15 @@ public class Client {
 		// Comportements définis en fonction du prefixe
 		switch(msg.getPrefix()){
 			case LIST:
-				System.out.println("\n -> List received.");
+				this.annonces.clear();
 			break;
-
 			case ANNO:
 				Annonce annonce = new Annonce(msg);
 				this.annonces.add(annonce);
 			break;
+			case DELETE:
+			break;
 		}
-
-		displayPrompt();
 	}
 
 	/**
@@ -278,14 +308,16 @@ public class Client {
 		}
 
 		if(msg != null){
+			msg.setMode(ProtocoleToken.TCP);
 			pw.print(msg.toString());
 			pw.flush();
 		}
 	}
 
-	public void tcp_sendMsg(Message mess) throws IOException{
-		if(mess != null){
-			pw.print(mess.toString());
+	public void tcp_sendMsg(Message msg) throws IOException{
+		if(msg != null){
+			msg.setMode(ProtocoleToken.TCP);
+			pw.print(msg.toString());
 			pw.flush();
 		}
 	}

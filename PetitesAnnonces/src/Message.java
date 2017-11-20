@@ -16,7 +16,7 @@ public class Message{
 	private int id_annonce = 0;
 	private String annonce_titre = "";
 	private String annonce_contenu = "";
-	private int annonce_prix = 0;
+	private double annonce_prix = 0;
 	private String client_message = "";
 	private int nb_anno = 0;
 
@@ -35,7 +35,8 @@ public class Message{
 	 * @throws MalformedMsgException Lance une exception si le message est malformé
 	 */
 	public Message(String mess) throws MalformedMsgException{
-		ArrayList<String> argv = new ArrayList<String>(Arrays.asList(mess.split("\\s+")));
+		//ArrayList<String> argv = new ArrayList<String>(Arrays.asList(mess.split("\\s+")));
+		ArrayList<String> argv = new ArrayList<String>(Arrays.asList(mess.split("#")));
 
 		try{
 			this.prefix = ProtocoleToken.valueOf(argv.get(0));
@@ -51,7 +52,7 @@ public class Message{
 					this.id_src = Integer.parseInt(argv.get(2));
 					this.annonce_titre = argv.get(3);
 					this.annonce_contenu = argv.get(4);
-					this.annonce_prix = Integer.parseInt(argv.get(5));
+					this.annonce_prix = Double.parseDouble(argv.get(5));
 				break;
 
 				case MESS:
@@ -85,18 +86,21 @@ public class Message{
 			break;
 
 			case ANNO:
-				this.mode = ProtocoleToken.TCP;
-				mess = String.format("%s %s %s %s %s %s",prefix, id_annonce, id_src, 
+				mess = String.format("%s#%s#%s#%s#%s#%s",prefix, id_annonce, id_src, 
 					annonce_titre, annonce_contenu, annonce_prix);
 			break;
 
 			case MESS:
 				this.mode = ProtocoleToken.TCP;
-				mess = String.format("%s %s %s %s",prefix, id_src, id_dst, client_message);
+				mess = String.format("%s#%s#%s#%s",prefix, id_src, id_dst, client_message);
 			break;
 
 			case LIST:
-				mess = String.format("%s %s", prefix, this.nb_anno);
+				mess = String.format("%s#%s", prefix, this.nb_anno);
+			break;
+
+			case DELETE:
+				mess = String.format("%s#%s", prefix, this.id_annonce);
 			break;
 		}
 			
@@ -148,7 +152,7 @@ public class Message{
 		this.annonce_contenu = contenu;
 	}
 
-	public void setAnnonce_Prix(int prix){
+	public void setAnnonce_Prix(double prix){
 		this.annonce_prix = prix;
 	}
 
@@ -193,7 +197,7 @@ public class Message{
 		return this.annonce_contenu;
 	}
 
-	public int getAnnonce_Prix(){
+	public double getAnnonce_Prix(){
 		return this.annonce_prix;
 	}
 
