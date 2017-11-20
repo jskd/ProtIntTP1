@@ -185,33 +185,27 @@ public class Client {
     else if(argv.get(0).equals("l")){
     	for(int i=0; i<annonces.size(); i++){
     		Annonce ann = annonces.get(i);
-    		System.out.println(String.format("[%d] %s %s %s$", ann.getIdClient(), ann.getTitre(), ann.getContenu(),
+    		System.out.println(String.format("[%d from %d] \n  %s %s %s$", ann.getIdAnnonce(), ann.getIdClient(), ann.getTitre(), ann.getContenu(),
     			ann.getPrix()));
     	}
     }
     else if(argv.get(0).equals("m")){
     	if(argv.size() > 1){
-    		int no_annonce = Integer.parseInt(argv.get(1));
+    		int id_client = Integer.parseInt(argv.get(1));
 
-    		if(no_annonce < this.annonces.size()){
+				System.out.print(" +Message : ");
+				String client_message = sc.nextLine();
 
-	    		System.out.print(" +Message : ");
-	    		String client_message = sc.nextLine();
+				Message mess = new Message();
+				mess.setPrefix(ProtocoleToken.MESS);
+				mess.setId_Dst(id_client);
+				mess.setClientMessage(client_message);
 
-	    		Message mess = new Message();
-	    		mess.setPrefix(ProtocoleToken.MESS);
-	    		mess.setId_Dst(this.annonces.get(no_annonce).getIdClient());
-	    		mess.setClientMessage(client_message);
-
-	    		try{
-		    		tcp_sendMsg(mess);
-		    	}catch(Exception e){
-		    		e.printStackTrace();
-		    	}
-    		}
-    		else{
-    			System.out.println(String.format("Error: L'annonce %d n'existe pas.", no_annonce));
-    		}
+				try{
+					tcp_sendMsg(mess);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 
     	}
     	else{
@@ -221,8 +215,8 @@ public class Client {
     else if(argv.get(0).equals("ta")){
     	LinkedList<Annonce> annonces = new LinkedList<>();
 
-    	annonces.add(new Annonce("Fender Télécaster", "ClassicVibe Custom", 489));	
-    	annonces.add(new Annonce("Ford Mustang", "GT350 Shelby", 55999));  	
+    	annonces.add(new Annonce("Fender Telecaster", "ClassicVibe Custom", 489));	
+    	annonces.add(new Annonce("Ford Mustang", "GT350 Shelby", 54300));  	
     	annonces.add(new Annonce("Luxury Chess", "Avec double dame.", 179));
     	
     	try{
@@ -262,7 +256,7 @@ public class Client {
 				this.annonces.add(annonce);
 			break;
 			case MESS:
-				System.out.println(String.format(" >[from %s] : %s ", msg.getId_Src(), msg.getClientMessage()));
+				System.out.println(String.format("\n[Message from %s] : %s ", msg.getId_Src(), msg.getClientMessage()));
 			break;
 		}
 	}
