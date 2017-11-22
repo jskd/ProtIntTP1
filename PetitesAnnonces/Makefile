@@ -22,11 +22,17 @@ runserv:
 runcli:
 	$(JVM) -classpath $(BIN_PATH) $(CLIENT) ${ip}
 
-runjar:
-	$(JVM) -jar build/dist/$(NAME_JAR).jar
+runjars:
+	$(JVM) -jar build/dist/$(SERV).jar
+
+runjarc:
+	$(JVM) -jar build/dist/$(CLIENT).jar ${ip}
 
 jar: all
-	jar cvmf META-INF/MANIFEST.MF build/dist/$(NAME_JAR).jar -C $(BIN_PATH) .
+	@echo "Main-Class: Serveur\n" > META-INF/MANIFEST.MF
+	jar cvmf META-INF/MANIFEST.MF build/dist/$(SERV).jar -C $(BIN_PATH) .
+	@echo "Main-Class: Client\n" > META-INF/MANIFEST.MF
+	jar cvmf META-INF/MANIFEST.MF build/dist/$(CLIENT).jar -C $(BIN_PATH) .
 
 tar: clean
 	tar cf $(NAME).tar Makefile README.txt bin/ src/
