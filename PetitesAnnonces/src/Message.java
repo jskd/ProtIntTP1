@@ -65,6 +65,10 @@ public class Message{
 				case LIST:
 					this.nb_anno = Integer.parseInt(argv.get(1));
 				break;
+
+				case DELETE:
+					this.id_annonce = Integer.parseInt(argv.get(1));
+				break;
 			}
 
 		}catch (Exception e){

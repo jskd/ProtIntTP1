@@ -11,6 +11,7 @@ public class Client {
   private static Scanner sc = new Scanner(System.in);
 
   private LinkedList<Annonce> annonces;
+  private LinkedList<Integer> mes_annonces; 
 
 	private String servAddr = "0.0.0.0";
 	private String name = "Client";
@@ -32,6 +33,7 @@ public class Client {
 	public Client(String ip){
 		this.servAddr = ip;
 		this.annonces = new LinkedList<Annonce>();
+		this.mes_annonces = new LinkedList<Integer>();
 		/**
 	   * Thread d'écoute TCP
 	   */
@@ -121,7 +123,7 @@ public class Client {
 	}
 
 	public static void displayPrompt(){
-		System.out.print("\n[a]Annonce [ta]TestAnno [l]List [m]Message [q]Quit : ");
+		System.out.print("\n[a]Annonce [ta]TestAnno [l]List [m]Message [d]Delete [q]Quit : ");
 	}
 
   /**
@@ -172,7 +174,9 @@ public class Client {
     		System.out.print(" +Prix : ");
     		Double prix = Double.parseDouble(sc.nextLine());
 
-    		Annonce annonce = new Annonce(title, content, prix);  	
+    		Annonce annonce = new Annonce(title, content, prix);
+    		mes_annonces.add(annonce.getIdAnnonce());
+
     		Message mess = annonce.toMessage();
     		tcp_sendMsg(mess);
 
@@ -183,13 +187,17 @@ public class Client {
     	}
     }
     else if(argv.get(0).equals("l")){
+
     	for(int i=0; i<annonces.size(); i++){
     		Annonce ann = annonces.get(i);
-    		System.out.println(String.format("[%d from %d] \n  %s %s %s$", ann.getIdAnnonce(), ann.getIdClient(), ann.getTitre(), ann.getContenu(),
+    		boolean ismine = mes_annonces.contains(ann.getIdAnnonce());
+
+    		System.out.println(String.format("%s[%d from %d] \n  %s %s %s$",(ismine ? "[*]" : ""), ann.getIdAnnonce(), ann.getIdClient(), ann.getTitre(), ann.getContenu(),
     			ann.getPrix()));
     	}
     }
     else if(argv.get(0).equals("m")){
+
     	if(argv.size() > 1){
     		int id_client = Integer.parseInt(argv.get(1));
 
@@ -213,8 +221,8 @@ public class Client {
     	}
     }
     else if(argv.get(0).equals("ta")){
-    	LinkedList<Annonce> annonces = new LinkedList<>();
 
+    	LinkedList<Annonce> annonces = new LinkedList<>();
     	annonces.add(new Annonce("Fender Telecaster", "ClassicVibe Custom", 489));	
     	annonces.add(new Annonce("Ford Mustang", "GT350 Shelby", 54300));  	
     	annonces.add(new Annonce("Luxury Chess", "Avec double dame.", 179));
@@ -229,6 +237,53 @@ public class Client {
     	}catch(Exception e){
     		e.printStackTrace();
     	}
+    }
+    else if(argv.get(0).equals("d")){
+
+    	System.out.println(" # My messages --------------");
+    	LinkedList<Annonce> choices = new LinkedList<Annonce>();
+    	int counter = 0;
+
+    	for(int i=0; i<annonces.size(); i++){
+    		Annonce ann = annonces.get(i);
+    		boolean ismine = mes_annonces.contains(ann.getIdAnnonce());
+
+    		if(ismine){
+    			choices.add(ann);
+	    		System.out.println(String.format("[%d] %s %s %s", 
+	    			counter, ann.getTitre(), ann.getContenu(),ann.getPrix()));
+
+	    		counter++;
+    		}
+    	}
+
+    	System.out.print("\n> Choose annonce to delete : ");
+    	int choice = Integer.parseInt(sc.nextLine());
+    	if(choices.size() > 0 && choice < choices.size()){
+    		int id_choice = choices.get(choice).getIdAnnonce();
+
+    		for(int i=0; i<annonces.size(); i++){
+    			Annonce ann = annonces.get(i);
+    			if(ann.getIdAnnonce() == id_choice){
+    				//annonces.remove(i);
+    				Message mess = new Message();
+						mess.setPrefix(ProtocoleToken.DELETE);
+						mess.setId_Annonce(id_choice);
+
+						try{
+							tcp_sendMsg(mess);
+						}catch(Exception e){
+							e.printStackTrace();
+						}
+    				break;
+    			}
+    		}
+
+    	}
+    	else{
+    		System.out.println("Error : Ce choix n'est pas possible.");
+    	}
+
     }
     else{
        System.out.format("Command %s doesn't exist.\n", argl);
@@ -281,6 +336,13 @@ public class Client {
 				this.annonces.add(annonce);
 			break;
 			case DELETE:
+				for(int i=0; i<annonces.size(); i++){
+					if(annonces.get(i).getIdAnnonce() == msg.getId_Annonce()){
+						mes_annonces.remove((Integer)msg.getId_Annonce());
+						annonces.remove(i);
+						break;
+					}
+				}
 			break;
 		}
 	}

@@ -92,7 +92,7 @@ public class ClientService implements Runnable{
 			case ANNO:
 				Annonce annonce = new Annonce(msg);
 				annonce.setIdClient(this.id);
-				annonce.setIdAnnonce(Integer.parseInt(Tools.getRandomIdent()));
+				//annonce.setIdAnnonce(Integer.parseInt(Tools.getRandomIdent()));
 				Serveur.clients.get(this).add(annonce);
 
 				diff_sendMsg(annonce.toMessage());
@@ -119,6 +119,26 @@ public class ClientService implements Runnable{
 					destinataire.tcp_sendMsg(msg);					
 				}
 
+			break;
+
+			case DELETE:
+				diff_sendMsg(msg);
+				boolean deleted = false;
+
+				// Parcours des annonces
+				it = Serveur.clients.entrySet().iterator();
+				while (it.hasNext() && !deleted) {
+					Map.Entry pair = (Map.Entry)it.next();
+					LinkedList annonces = (LinkedList) pair.getValue();
+
+					for(int i=0; i<annonces.size(); i++){
+						if( ((Annonce)annonces.get(i)).getIdAnnonce() == msg.getId_Annonce()){
+							annonces.remove(i);
+							deleted = true;
+							break;
+						}
+					}
+				}
 			break;
 
 			case BYE:

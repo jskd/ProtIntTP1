@@ -8,6 +8,7 @@ public class Annonce{
 	private double prix;
 
 	public Annonce(String titre, String contenu, double prix){
+		this.id_annonce = Integer.parseInt(Tools.getRandomIdent());
 		this.id_client = 0;
 		this.titre = titre;
 		this.contenu = contenu;
