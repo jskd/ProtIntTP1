@@ -20,8 +20,9 @@ public class Serveur{
 			srvSock = new ServerSocket(port);
 			System.out.println("# Starting serveur...");
 			String hostname = srvSock.getInetAddress().getHostName();
+			String ip = Tools.getLocalIP();
 			String localport = String.valueOf(srvSock.getLocalPort());	
-			System.out.println(" -> Serveur listening at " + hostname + ":" + localport); 
+			System.out.println(" -> Serveur listening at " + ip + ":" + localport); 
 
 			while (true){
 				try{

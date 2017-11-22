@@ -8,6 +8,8 @@ import java.util.*;
  */
 public class Message{
 
+	private String SEPARATOR = "#";
+
 	// Champs du message (Protocole)
 	private ProtocoleToken prefix = null;
 	private ProtocoleToken mode = null;
@@ -36,7 +38,7 @@ public class Message{
 	 */
 	public Message(String mess) throws MalformedMsgException{
 		//ArrayList<String> argv = new ArrayList<String>(Arrays.asList(mess.split("\\s+")));
-		ArrayList<String> argv = new ArrayList<String>(Arrays.asList(mess.split("#")));
+		ArrayList<String> argv = new ArrayList<String>(Arrays.asList(mess.split(SEPARATOR)));
 
 		try{
 			this.prefix = ProtocoleToken.valueOf(argv.get(0));
@@ -90,21 +92,23 @@ public class Message{
 			break;
 
 			case ANNO:
-				mess = String.format("%s#%s#%s#%s#%s#%s",prefix, id_annonce, id_src, 
-					annonce_titre, annonce_contenu, annonce_prix);
+				mess = String.format("%s%s%s%s%s%s%s%s%s%s%s",
+					prefix, SEPARATOR, id_annonce, SEPARATOR, id_src, SEPARATOR, 
+					annonce_titre, SEPARATOR, annonce_contenu, SEPARATOR, annonce_prix);
 			break;
 
 			case MESS:
 				this.mode = ProtocoleToken.TCP;
-				mess = String.format("%s#%s#%s#%s",prefix, id_src, id_dst, client_message);
+				mess = String.format("%s%s%s%s%s%s%s",
+					prefix, SEPARATOR, id_src, SEPARATOR, id_dst, SEPARATOR, client_message);
 			break;
 
 			case LIST:
-				mess = String.format("%s#%s", prefix, this.nb_anno);
+				mess = String.format("%s%s%s", prefix, SEPARATOR, this.nb_anno);
 			break;
 
 			case DELETE:
-				mess = String.format("%s#%s", prefix, this.id_annonce);
+				mess = String.format("%s%s%s", prefix, SEPARATOR, this.id_annonce);
 			break;
 		}
 			

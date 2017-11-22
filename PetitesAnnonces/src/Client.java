@@ -217,7 +217,7 @@ public class Client {
 
     	}
     	else{
-    		System.out.println("Usage : m <annonce_number>");
+    		System.out.println("Usage : m <id_client>");
     	}
     }
     else if(argv.get(0).equals("ta")){
