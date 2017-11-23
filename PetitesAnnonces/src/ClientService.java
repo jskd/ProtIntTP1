@@ -20,7 +20,8 @@ public class ClientService implements Runnable{
 	private boolean connected = false;
 	private Runnable tcp_listening;
 
-	public ClientService(Socket s){
+	public ClientService(Socket s, boolean debug){
+		this.DEBUG = debug;
 		this.socket = s;
 		this.hostname = socket.getInetAddress().getHostName();
 		this.port = socket.getPort();
@@ -66,9 +67,9 @@ public class ClientService implements Runnable{
 			this.dso = new MulticastSocket();
 			connected = true;
 
-			(new Thread(tcp_listening)).start();
-
 			tcp_sendListAnnonces();
+
+			(new Thread(tcp_listening)).start();
 
 		}catch (Exception e){
 			System.out.println("Connection failed.");

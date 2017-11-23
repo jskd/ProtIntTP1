@@ -114,6 +114,10 @@ public class Client {
 			sc.close();
 		}
 
+		try{
+			Thread.sleep(500);
+		}catch(Exception e){}
+
 		// Boucle d'execution des commandes
 		while(true){
 		  displayPrompt();
@@ -124,7 +128,7 @@ public class Client {
 	}
 
 	public static void displayPrompt(){
-		System.out.print("\n[a]Annonce [ta]TestAnno [l]List [m]Message [d]Delete [q]Quit : ");
+		System.out.println("\n[a]Annonce [ta]TestAnno [l]List [m]Message [d]Delete [q]Quit : ");
 	}
 
   /**
@@ -168,12 +172,15 @@ public class Client {
     else if(argv.get(0).equals("a")){
 
     	try{
+    		Double prix = 0.0;
     		System.out.print(" +Titre : ");
     		String title = sc.nextLine();
     		System.out.print(" +Contenu : ");
     		String content = sc.nextLine();
     		System.out.print(" +Prix : ");
-    		Double prix = Double.parseDouble(sc.nextLine());
+    		try{
+    			prix = Double.parseDouble(sc.nextLine());
+    		}catch(Exception e){}
 
     		Annonce annonce = new Annonce(title, content, prix);
     		mes_annonces.add(annonce.getIdAnnonce());
@@ -287,7 +294,7 @@ public class Client {
 
     }
     else{
-       System.out.format("Command %s doesn't exist.\n", argl);
+       System.out.println(String.format("Command %s doesn't exist.", argl));
     }
   }
 
@@ -299,7 +306,7 @@ public class Client {
    */
 	public void tcp_readMessage(Message msg) throws IOException{
 		if(DEBUG){
-			System.out.print(String.format("\n[RECEIVED TCP] %s", msg));
+			System.out.print(String.format("[RECEIVED TCP] %s", msg));
 		}
 
 		// Comportements définis en fonction du prefixe
@@ -312,7 +319,7 @@ public class Client {
 				this.annonces.add(annonce);
 			break;
 			case MESS:
-				System.out.println(String.format("\n[Message from %s] : %s ", msg.getId_Src(), msg.getClientMessage()));
+				System.out.println(String.format("[Message from %s] : %s ", msg.getId_Src(), msg.getClientMessage()));
 			break;
 		}
 	}
@@ -324,7 +331,7 @@ public class Client {
    */
 	public void diff_readMessage(Message msg) throws IOException{
 		if(DEBUG){
-			System.out.print(String.format("\n[RECEIVED UDP] %s \n", msg));
+			System.out.print(String.format("[RECEIVED UDP] %s", msg));
 		}
 
 		// Comportements définis en fonction du prefixe

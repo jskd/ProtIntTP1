@@ -17,7 +17,7 @@ clean:
 	rm -f $(BIN_PATH)*.class
 
 runserv:
-	$(JVM) -classpath $(BIN_PATH) $(SERV)
+	$(JVM) -classpath $(BIN_PATH) $(SERV) ${debug}
 
 runcli:
 	$(JVM) -classpath $(BIN_PATH) $(CLIENT) ${ip} ${debug}

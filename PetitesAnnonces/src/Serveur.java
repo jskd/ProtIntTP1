@@ -7,11 +7,13 @@ import java.util.Random;
 
 
 public class Serveur{
+	private boolean DEBUG = false;
 	public static int port = 1027;
 	public static HashMap<ClientService, LinkedList<Annonce>> clients;
 	private ServerSocket srvSock;
 
-	public Serveur(){
+	public Serveur(String debug){
+		this.DEBUG = Boolean.valueOf(debug);
 		clients = new HashMap<ClientService, LinkedList<Annonce>>();	
 	}
 
@@ -28,7 +30,7 @@ public class Serveur{
 				try{
 					
 					Socket clientSock = srvSock.accept();
-					ClientService client = new ClientService(clientSock);
+					ClientService client = new ClientService(clientSock, this.DEBUG);
 					clients.put(client, new LinkedList<Annonce>());
 					
 					(new Thread(client)).start();
@@ -45,7 +47,12 @@ public class Serveur{
 
 	public static void main(String[] args){
 		try{
-			(new Serveur()).start();
+			if(args.length >= 1){
+				(new Serveur(args[0])).start();
+			}
+			else{
+				System.out.println("Usage: Serveur <debug>");
+			}
 		}catch (Exception e){
 			e.printStackTrace();
 		}
