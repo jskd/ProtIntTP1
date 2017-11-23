@@ -10,7 +10,7 @@ public class ClientService implements Runnable{
 	private int port;
 	private int id;
 
-	private String ip_multdif = "224.4.4.4";
+	private String ip_multdif = "225.5.5.5";
 	private int multdif_port = 4444;
 	private DatagramSocket dso;
 

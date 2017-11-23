@@ -19,7 +19,7 @@ public class Client {
 	private Socket socket;
 	private int servPort = 1027;
 
-	private String ip_multdif = "224.4.4.4";
+	private String ip_multdif = "225.5.5.5";
 	private int multdif_port = 4444;
 	private MulticastSocket mso;
 
