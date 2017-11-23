@@ -35,7 +35,7 @@ jar: all
 	jar cvmf META-INF/MANIFEST.MF build/dist/$(CLIENT).jar -C $(BIN_PATH) .
 
 tar: clean
-	tar cf $(NAME).tar Makefile README.txt bin/ src/
+	tar cf $(NAME).tar Makefile README.txt bin/ src/ build/ META-INF/
 
 doc:
 	javadoc -encoding utf8 -docencoding utf8 -charset utf8 -d javadoc -author $(SRC_PATH)*.java

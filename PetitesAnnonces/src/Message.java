@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class Message{
 
-	private String SEPARATOR = "#";
+	private String SEPARATOR = "##";
 
 	// Champs du message (Protocole)
 	private ProtocoleToken prefix = null;
@@ -38,7 +38,7 @@ public class Message{
 	 */
 	public Message(String mess) throws MalformedMsgException{
 		//ArrayList<String> argv = new ArrayList<String>(Arrays.asList(mess.split("\\s+")));
-		ArrayList<String> argv = new ArrayList<String>(Arrays.asList(mess.split(SEPARATOR)));
+		ArrayList<String> argv = new ArrayList<String>(Arrays.asList(mess.split("(" + SEPARATOR + ")")));
 
 		try{
 			this.prefix = ProtocoleToken.valueOf(argv.get(0));
