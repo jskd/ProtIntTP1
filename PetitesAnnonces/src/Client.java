@@ -114,12 +114,12 @@ public class Client {
 			sc.close();
 		}
 
-		try{
-			Thread.sleep(500);
-		}catch(Exception e){}
-
 		// Boucle d'execution des commandes
 		while(true){
+			try{
+				Thread.sleep(600);
+			}catch(Exception e){}
+
 		  displayPrompt();
 		  read_command();
 		  tokenize_command();
@@ -248,7 +248,7 @@ public class Client {
     }
     else if(argv.get(0).equals("d")){
 
-    	System.out.println(" # My messages --------------");
+    	System.out.println(" # My annonces --------------");
     	LinkedList<Annonce> choices = new LinkedList<Annonce>();
     	int counter = 0;
 
@@ -266,7 +266,11 @@ public class Client {
     	}
 
     	System.out.print("\n> Choose annonce to delete : ");
-    	int choice = Integer.parseInt(sc.nextLine());
+    	int choice = 0;
+    	try{
+    		choice = Integer.parseInt(sc.nextLine());
+    	}catch(Exception e){}
+
     	if(choices.size() > 0 && choice < choices.size()){
     		int id_choice = choices.get(choice).getIdAnnonce();
 
@@ -331,7 +335,7 @@ public class Client {
    */
 	public void diff_readMessage(Message msg) throws IOException{
 		if(DEBUG){
-			System.out.print(String.format("[RECEIVED UDP] %s", msg));
+			System.out.println(String.format("[RECEIVED UDP] %s", msg));
 		}
 
 		// Comportements définis en fonction du prefixe
