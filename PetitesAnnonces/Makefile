@@ -20,7 +20,7 @@ runserv:
 	$(JVM) -classpath $(BIN_PATH) $(SERV)
 
 runcli:
-	$(JVM) -classpath $(BIN_PATH) $(CLIENT) ${ip}
+	$(JVM) -classpath $(BIN_PATH) $(CLIENT) ${ip} ${debug}
 
 runjars:
 	$(JVM) -jar build/dist/$(SERV).jar

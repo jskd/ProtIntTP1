@@ -4,13 +4,13 @@ import java.lang.*;
 import java.util.*;
 
 public class ClientService implements Runnable{
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 	private Socket socket;
 	private String hostname;
 	private int port;
 	private int id;
 
-	private String ip_multdif = "225.5.5.5";
+	private String ip_multdif = "224.4.4.4";
 	private int multdif_port = 4444;
 	private DatagramSocket dso;
 

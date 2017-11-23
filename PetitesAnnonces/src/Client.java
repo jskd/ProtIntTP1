@@ -19,7 +19,7 @@ public class Client {
 	private Socket socket;
 	private int servPort = 1027;
 
-	private String ip_multdif = "225.5.5.5";
+	private String ip_multdif = "224.4.4.4";
 	private int multdif_port = 4444;
 	private MulticastSocket mso;
 
@@ -30,7 +30,8 @@ public class Client {
 	private Runnable multicast_listening;
 	private boolean connected = false;
 
-	public Client(String ip){
+	public Client(String ip, String debug){
+		this.DEBUG = Boolean.valueOf(debug);
 		this.servAddr = ip;
 		this.annonces = new LinkedList<Annonce>();
 		this.mes_annonces = new LinkedList<Integer>();
@@ -380,10 +381,10 @@ public class Client {
 
 	public static void main(String[] args) {
 		if(args.length >= 1){
-			(new Client(args[0])).start();
+			(new Client(args[0], args[1])).start();
 		}
 		else{
-			System.out.println("Usage: Client <ip_serveur>");
+			System.out.println("Usage: Client <ip_serveur> <debug>");
 		}
 	}
 }
