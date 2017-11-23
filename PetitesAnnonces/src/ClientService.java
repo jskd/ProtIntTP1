@@ -12,7 +12,7 @@ public class ClientService implements Runnable{
 
 	private String ip_multdif = "224.4.4.4";
 	private int multdif_port = 4444;
-	private DatagramSocket dso;
+	private MulticastSocket dso;
 
 	private BufferedReader br;
 	private PrintWriter pw;
@@ -63,7 +63,7 @@ public class ClientService implements Runnable{
 			System.out.println("# New connection with " + hostname + ":" + port);
 			br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-			this.dso = new DatagramSocket();
+			this.dso = new MulticastSocket();
 			connected = true;
 
 			(new Thread(tcp_listening)).start();
