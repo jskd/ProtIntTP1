@@ -4,7 +4,7 @@ import java.lang.*;
 import java.util.*;
 
 public class ClientService implements Runnable{
-	private boolean DEBUG = false;
+	private boolean DEBUG = true;
 	private Socket socket;
 	private String hostname;
 	private int port;
@@ -36,10 +36,8 @@ public class ClientService implements Runnable{
 					try{
 						// Lecture des messages entrant
 						while(connected){
-
 							String st_mess = br.readLine();
 							Message msg = new Message(st_mess);
-
 							// Interpretation du message
 							tcp_readMessage(msg);
 						}

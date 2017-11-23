@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.*;
 
 public class Client {
-	private boolean DEBUG = false;
+	private boolean DEBUG = true;
 
 	private static final int MAX_SIZE_MSG = 2048;
 	private static String argl;
