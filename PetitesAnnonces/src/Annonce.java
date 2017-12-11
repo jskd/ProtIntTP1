@@ -70,7 +70,7 @@ public class Annonce{
 		this.contenu = contenu;
 	}
 
-	public void setPrix(int prix){
+	public void setPrix(double prix){
 		this.prix = prix;
 	}
 }

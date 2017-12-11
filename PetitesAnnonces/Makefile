@@ -23,10 +23,10 @@ runcli:
 	$(JVM) -classpath $(BIN_PATH) $(CLIENT) ${ip} ${debug}
 
 runjars:
-	$(JVM) -jar build/dist/$(SERV).jar
+	$(JVM) -jar build/dist/$(SERV).jar ${debug}
 
 runjarc:
-	$(JVM) -jar build/dist/$(CLIENT).jar ${ip}
+	$(JVM) -jar build/dist/$(CLIENT).jar ${ip} ${debug}
 
 jar: all
 	@echo "Main-Class: Serveur\n" > META-INF/MANIFEST.MF
@@ -35,7 +35,7 @@ jar: all
 	jar cvmf META-INF/MANIFEST.MF build/dist/$(CLIENT).jar -C $(BIN_PATH) .
 
 tar: clean
-	tar cf $(NAME).tar Makefile README.txt bin/ src/ build/ META-INF/
+	tar cf $(NAME).tar Makefile README.txt bin/ src/ build/ META-INF/ Architecture.pdf
 
 doc:
 	javadoc -encoding utf8 -docencoding utf8 -charset utf8 -d javadoc -author $(SRC_PATH)*.java
