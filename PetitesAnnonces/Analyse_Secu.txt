@@ -1,0 +1,11 @@
+Annalyse de la sécurité :
+----------------------------------------------------
+Le fonctionnement étant tellement simple et basique que les failles sont peu nombreuse.
+De plus tout messages ne respectant pas les formes acceptées dans Message.java sont tout
+simplement ignorés par le serveur. La seule attaque possible que nous voyons est une surcharge
+du serveur avec un envois massif de messages.
+
+L'autre problème présent tiens plus de la vie privée, en effet les messages entre clients ne sont
+pas cryptés, ce qui induit donc une lecture aisée des informations personnelles éventuellement transmises,
+numéro de téléphone, adresse etc.
+----------------------------------------------------
